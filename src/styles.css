@@ -14,7 +14,7 @@
   --graphite: #536057;
   --rule: #a9ad9f;
   --red: #d93c3d;
-  --green: #159a61;
+  --green: #0b7447;
   --yellow: #f1be42;
 }
 
@@ -134,11 +134,6 @@ button:focus-visible, input:focus-visible { outline: 3px solid #2a67d3; outline-
 .player-strip:active { cursor: grabbing; }
 .strip-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 19px; font-weight: 700; }
 .player-strip svg { flex: 0 0 auto; color: #7c817c; }
-.balance-hot { border-color: #d83d3d; }
-.balance-warm { border-color: #9c5435; }
-.balance-even { border-color: #46554c; }
-.balance-cool { border-color: #277957; }
-.balance-ready { border-color: #0a9d61; }
 .field-ledger.is-target, .bench-ledger.is-target { background: rgba(241, 190, 66, .13); }
 .tap-target { position: absolute; inset: 42px 6px 7px; z-index: 3; border: 2px dashed var(--ink); background: rgba(243,235,221,.94); font-weight: 700; }
 .bench-ledger { padding: 0 6px 7px; }

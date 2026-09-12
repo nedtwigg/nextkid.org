@@ -192,12 +192,12 @@ function PregameScreen({ ready }: { ready: boolean }) {
   );
 }
 
-function balanceClass(balance: number) {
-  if (balance >= 1.4) return 'balance-hot';
-  if (balance >= 0.5) return 'balance-warm';
-  if (balance <= -1.4) return 'balance-ready';
-  if (balance <= -0.5) return 'balance-cool';
-  return 'balance-even';
+function balanceColor(balance: number) {
+  const midpoint = [70, 85, 76];
+  const endpoint = balance < 0 ? [10, 157, 97] : [216, 61, 61];
+  const amount = Math.min(Math.abs(balance) / 2.5, 1);
+  const channel = (index: number) => Math.round(midpoint[index] + (endpoint[index] - midpoint[index]) * amount);
+  return `rgb(${channel(0)} ${channel(1)} ${channel(2)})`;
 }
 
 function PlayerStrip({ player, onDragStart, onClick }: {
@@ -212,7 +212,8 @@ function PlayerStrip({ player, onDragStart, onClick }: {
       : 'playing time near even';
   return (
     <button
-      className={`player-strip ${balanceClass(player.balance)}`}
+      className="player-strip"
+      style={{ borderColor: balanceColor(player.balance) }}
       draggable
       type="button"
       onDragStart={(event) => onDragStart(event, player.name)}

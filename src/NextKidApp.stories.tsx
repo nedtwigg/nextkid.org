@@ -58,6 +58,9 @@ export const GameRunningTypical15Players: Story = {
     await expect(canvas.getAllByRole('button', { name: /playing time|field time|bench time/i })).toHaveLength(15);
     await userEvent.click(canvas.getByRole('button', { name: /^STOP$/i }));
     await expect(canvas.getByText('PAUSED')).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: /^START$/i }));
+    await expect(canvas.getByText('RUNNING')).toBeVisible();
+    (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
   },
 };
 
@@ -68,6 +71,9 @@ export const GamePaused: Story = {
     await expect(canvas.getByText('PAUSED')).toBeVisible();
     await userEvent.click(canvas.getByRole('button', { name: /^START$/i }));
     await expect(canvas.getByText('RUNNING')).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: /^STOP$/i }));
+    await expect(canvas.getByText('PAUSED')).toBeVisible();
+    (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
   },
 };
 
