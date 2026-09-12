@@ -38,6 +38,7 @@ Rather than enforcing a rigid rotation schedule, NextKid continuously normalizes
 - Track field time and bench time only while a player is active.
 - Show the normalized field-minus-bench balance on a continuous green-through-black-to-red scale, saturating at -2.5 and +2.5 minutes.
 - Permit any manual player move regardless of the recommendation.
+- Label coach-name inputs by physical side (Left coach and Right coach), and allow the two coach field columns to swap sides during the game.
 - Run as a phone-only website; desktop may simply stretch the phone interface.
 - Assumed for this prototype: every primary scenario fits within a 390×844 CSS-pixel viewport with no page scrolling.
 - Delete backing game data 24 hours after the game stops.

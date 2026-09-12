@@ -1,10 +1,11 @@
-import { useMemo, useState, type DragEvent } from 'react';
+import { useMemo, useRef, useState, type DragEvent, type PointerEvent } from 'react';
 import {
   Check,
   ChevronRight,
   Clock3,
   GripVertical,
   Link2,
+  MoveHorizontal,
   Pause,
   Play,
   Plus,
@@ -117,8 +118,8 @@ function NewGameScreen() {
         <p>Coach names label the two fields. Player names can be changed until the clock starts.</p>
       </section>
       <section className="coach-row" aria-label="Coaches">
-        <label>Alice’s field<input defaultValue="Alice" /></label>
-        <label>Bob’s field<input defaultValue="Bob" /></label>
+        <label>Left coach<input defaultValue="Alice" /></label>
+        <label>Right coach<input defaultValue="Bob" /></label>
       </section>
       <section className="roster-editor">
         <div className="section-heading"><h2>Players</h2><span>15 MAX</span></div>
@@ -232,7 +233,41 @@ function GameScreen({ paused = false, balanced = false }: { paused?: boolean; ba
   }, [balanced]);
   const [running, setRunning] = useState(!paused);
   const [zones, setZones] = useState(initialZones);
+  const [coachOrder, setCoachOrder] = useState<('alice' | 'bob')[]>(['alice', 'bob']);
   const [selected, setSelected] = useState<string | null>(null);
+  const coachPointer = useRef<{ x: number; moved: boolean } | null>(null);
+  const suppressCoachClick = useRef(false);
+
+  const swapCoaches = () => setCoachOrder(([left, right]) => [right, left]);
+
+  const coachPointerDown = (event: PointerEvent<HTMLButtonElement>) => {
+    coachPointer.current = { x: event.clientX, moved: false };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const coachPointerMove = (event: PointerEvent<HTMLButtonElement>) => {
+    if (coachPointer.current && Math.abs(event.clientX - coachPointer.current.x) > 36) {
+      coachPointer.current.moved = true;
+    }
+  };
+
+  const coachPointerUp = (event: PointerEvent<HTMLButtonElement>) => {
+    if (coachPointer.current?.moved) {
+      suppressCoachClick.current = true;
+      swapCoaches();
+      window.setTimeout(() => { suppressCoachClick.current = false; }, 0);
+    }
+    coachPointer.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  };
+
+  const coachClick = () => {
+    if (suppressCoachClick.current) {
+      suppressCoachClick.current = false;
+      return;
+    }
+    swapCoaches();
+  };
 
   const movePlayer = (name: string, destination: keyof typeof zones) => {
     setZones((current) => {
@@ -271,14 +306,29 @@ function GameScreen({ paused = false, balanced = false }: { paused?: boolean; ba
         </button>
       </section>
       <section className="field-grid" aria-label="Player placement fields">
-        {(['alice', 'bob'] as const).map((zone) => (
+        {coachOrder.map((zone, index) => (
           <section
             className={`field-ledger ${selected ? 'is-target' : ''}`}
             key={zone}
+            data-testid={index === 0 ? 'left-field' : 'right-field'}
             onDragOver={(event) => event.preventDefault()}
             onDrop={(event) => drop(event, zone)}
           >
-            <div className="field-heading"><h2>{zone === 'alice' ? 'Alice' : 'Bob'}</h2><span>{zones[zone].length} FIELD</span></div>
+            <div className="field-heading">
+              <h2>{zone === 'alice' ? 'Alice' : 'Bob'}</h2>
+              <button
+                className="coach-drag-handle"
+                type="button"
+                aria-label={`${zone === 'alice' ? 'Alice' : 'Bob'}, ${index === 0 ? 'left' : 'right'} coach. Drag horizontally or press to swap sides`}
+                onPointerDown={coachPointerDown}
+                onPointerMove={coachPointerMove}
+                onPointerUp={coachPointerUp}
+                onClick={coachClick}
+              >
+                <MoveHorizontal size={16} aria-hidden="true" />
+                <span>{index === 0 ? 'LEFT' : 'RIGHT'}</span>
+              </button>
+            </div>
             {zones[zone].map((name) => {
               const player = balancedPlayers.get(name)!;
               return <PlayerStrip key={name} player={player} onDragStart={dragStart} onClick={() => selected === name ? setSelected(null) : setSelected(name)} />;

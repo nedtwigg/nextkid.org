@@ -117,6 +117,13 @@ components:
     padding: "0 8px 0 10px"
     height: "48px"
     width: "100%"
+  coach-side-handle:
+    backgroundColor: "transparent"
+    textColor: "{colors.graphite-pencil}"
+    typography: "{typography.label}"
+    rounded: "0"
+    padding: "0 2px"
+    height: "44px"
 ---
 
 # Design System: NextKid
@@ -194,7 +201,7 @@ The palette reads like materials gathered on a touchline: cream card stock, fore
 
 The core surface is a centered phone sheet capped at 390px wide and 844px high, with overflow intentionally contained. Desktop simply reveals the dark touchline surround; it does not introduce a separate desktop information architecture. The smallest declared width is 320px, while the implemented sheet keeps at least 600px of height.
 
-The layout uses compact 6–10px internal gaps, a 14px working gutter, and 18–24px spacing for major editorial pauses. One-pixel graphite rules separate ordinary ledger information; two-pixel forest rules announce zones; three-pixel tape borders make player strips easy to locate. Dense two-column grids are reserved for parallel or repeatable choices, while primary progression actions span the available width. On the shipped placement surface, the compact header and clock sit above two equal field ledgers and one full-width bench ledger so all 15 player names remain in the first viewport; that is the Match Card's signature composition, not a default grid for unrelated workflows.
+The layout uses compact 6–10px internal gaps, a 14px working gutter, and 18–24px spacing for major editorial pauses. One-pixel graphite rules separate ordinary ledger information; two-pixel forest rules announce zones; three-pixel tape borders make player strips easy to locate. Dense two-column grids are reserved for parallel or repeatable choices, while primary progression actions span the available width. On the shipped placement surface, the compact header and clock sit above two equal coach field ledgers and one full-width bench ledger so all 15 player names remain in the first viewport. Each coach field travels with its players when dragged horizontally from left to right; that is the Match Card's signature composition, not a default grid for unrelated workflows.
 
 At compact heights of 700px or less, the game view shortens its header, clock row, player strips, and gaps as one coordinated density step. Critical placement content remains visible instead of becoming scroll-dependent.
 
@@ -255,6 +262,10 @@ The clock is a three-part ruled bar with separate STOP and START destinations ar
 
 The strip contains the player's name and a grip mark—no displayed minutes and no recommended move. Its 3px border is interpolated continuously from weathered graphite through fluorescent green or red endpoints according to the normalized balance, while the accessible name describes the same condition in words. Pointer hover adds a restrained lift; tap selection exposes destination zones without constraining the coach's choice.
 
+### Coach Side Handle
+
+Each field heading pairs the coach's name with a 44px horizontal-drag handle labeled LEFT or RIGHT. Dragging the handle across swaps the complete coach field columns, including their players; pressing the same control provides an accessible keyboard and tap alternative. The horizontal arrow and side word travel together so the interaction does not depend on gesture discovery alone.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -264,6 +275,7 @@ The strip contains the player's name and a grip mark—no displayed minutes and 
 - **Do** preserve the cream-paper, forest-ink, graphite-rule material stack across new surfaces.
 - **Do** let rules, dense grids, and explicit labels carry structure before adding depth or decoration.
 - **Do** keep critical touch targets at least 44px high in ordinary phone layouts.
+- **Do** label coach setup fields by physical side and keep side swapping available through both horizontal drag and press.
 
 ### Don't:
 

@@ -125,10 +125,14 @@ button:focus-visible, input:focus-visible { outline: 3px solid #2a67d3; outline-
 .clock-bar span { grid-column: 1 / -1; font: 600 9px/1 'Barlow Condensed'; letter-spacing: .1em; margin-top: 4px; }
 .field-grid { min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .field-ledger, .bench-ledger { position: relative; border-top: 2px solid var(--ink); background: rgba(255,255,255,.18); }
-.field-ledger { min-height: 0; display: grid; grid-template-rows: 42px repeat(4, minmax(48px, 1fr)); gap: 6px; padding: 0 6px 7px; }
+.field-ledger { min-height: 0; display: grid; grid-template-rows: 44px repeat(4, minmax(48px, 1fr)); gap: 6px; padding: 0 6px 7px; }
 .field-heading { display: flex; align-items: center; justify-content: space-between; min-width: 0; }
 .field-heading h2 { margin: 0; font: 700 25px/1 'Barlow Condensed'; text-transform: uppercase; }
-.field-heading span { font: 600 9px/1 'Barlow Condensed'; letter-spacing: .06em; color: var(--graphite); white-space: nowrap; }
+.field-heading > span { font: 600 9px/1 'Barlow Condensed'; letter-spacing: .06em; color: var(--graphite); white-space: nowrap; }
+.coach-drag-handle { min-width: 76px; min-height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 0 2px; color: var(--graphite); cursor: ew-resize; touch-action: none; }
+.coach-drag-handle span { font: 700 9px/1 'Barlow Condensed'; letter-spacing: .08em; }
+.coach-drag-handle:hover { color: var(--ink); }
+.coach-drag-handle:active { color: var(--green); }
 .player-strip { position: relative; width: 100%; min-width: 0; min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 4px; border: 3px solid var(--graphite); border-radius: 3px; background: #fbf6eb; padding: 0 8px 0 10px; cursor: grab; }
 .player-strip:active { cursor: grabbing; }
 .strip-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 19px; font-weight: 700; }

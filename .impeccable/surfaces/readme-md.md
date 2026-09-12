@@ -15,7 +15,7 @@ Two microsoccer coaches use a shared phone URL outdoors and need to record atten
 
 ## Direction and memorable moment
 
-Match Card: a living referee ledger using weatherproof cream paper, forest ink, graphite rules, and fluorescent red/green roster tape. The memorable moment is the quiet placement board: Alice’s field, Bob’s field, and the bench keep all 15 names visible while only their borders carry the fairness signal.
+Match Card: a living referee ledger using weatherproof cream paper, forest ink, graphite rules, and fluorescent red/green roster tape. The memorable moment is the quiet placement board: the left coach field, right coach field, and bench keep all 15 names visible while only their borders carry the fairness signal. Either coach field can be dragged horizontally to swap sides.
 
 Approved composition: `.impeccable/mocks/placement-only.json` (explicit user direction after the visual probes).
 
@@ -25,7 +25,8 @@ Approved composition: `.impeccable/mocks/placement-only.json` (explicit user dir
 | --- | --- | --- |
 | Header | NextKid wordmark, phase title, shared-live state | Semantic HTML/CSS |
 | Clock | Explicit STOP and START/KEEP RUNNING destinations with central tabular time | Buttons and CSS |
-| Placement | Alice and Bob field ledgers plus a full-width seven-player bench; all 15 names coexist in one viewport | CSS grid/list |
+| Placement | Left and right coach field ledgers plus a full-width seven-player bench; all 15 names coexist in one viewport | CSS grid/list |
+| Coach side swap | A 44px horizontal-drag handle in each coach heading; dragging or pressing swaps the complete field columns | Pointer events, button semantics, CSS grid |
 | Player marker | Name only, with a continuous red–black–green border and drag affordance; no displayed minutes or recommendation | Button/HTML/CSS |
 | Pregame | Arrival-order checklist with late/absent note states | Semantic form controls |
 | Setup | Coach names, roster, single primary progression action | Semantic form controls |
