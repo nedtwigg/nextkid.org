@@ -1,0 +1,37 @@
+{
+  "name": "nextkid-storybook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build",
+    "test-storybook": "vitest --project=storybook"
+  },
+  "dependencies": {
+    "@fontsource/atkinson-hyperlegible": "latest",
+    "@fontsource/barlow-condensed": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "latest",
+    "@storybook/addon-vitest": "latest",
+    "@storybook/react-vite": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "latest",
+    "@vitest/browser-playwright": "^4.0.0",
+    "jsdom": "latest",
+    "playwright": "latest",
+    "storybook": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "vitest": "^4.0.0"
+  },
+  "packageManager": "pnpm@10.17.1"
+}
