@@ -3,6 +3,7 @@ dist/
 storybook-static/
 .DS_Store
 *.tsbuildinfo
+.impeccable/
 .impeccable/questions/
 .impeccable/sketches/
 .impeccable/*-board.webp
