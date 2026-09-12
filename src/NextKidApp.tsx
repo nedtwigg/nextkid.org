@@ -1,6 +1,5 @@
 import { useMemo, useState, type DragEvent } from 'react';
 import {
-  ArrowRight,
   Check,
   ChevronRight,
   Clock3,
@@ -92,10 +91,10 @@ function WelcomeScreen({ onNewGame }: { onNewGame: () => void }) {
         <h1>Coach the game.<br />We’ll watch the minutes.</h1>
         <p>Fair, arrival-aware playing time for two fields—without a rotation spreadsheet.</p>
       </section>
-      <div className="ledger-demo" aria-label="Example fair swap">
-        <span className="tape tape-out"><small>OUT</small>Maya</span>
-        <ArrowRight aria-hidden="true" />
-        <span className="tape tape-in"><small>IN</small>Theo</span>
+      <div className="placement-demo" aria-label="Example player placement">
+        <div><small>ALICE</small><span style={{ borderColor: balanceColor(1.4) }}>Maya</span><span style={{ borderColor: balanceColor(0.1) }}>Sam</span></div>
+        <div><small>BOB</small><span style={{ borderColor: balanceColor(-0.2) }}>Ava</span><span style={{ borderColor: balanceColor(0.6) }}>Finn</span></div>
+        <div><small>BENCH</small><span style={{ borderColor: balanceColor(-1.7) }}>Theo</span><span style={{ borderColor: balanceColor(-0.5) }}>Eli</span></div>
       </div>
       <section className="welcome-actions">
         <button className="primary-action" type="button" onClick={onNewGame}>
