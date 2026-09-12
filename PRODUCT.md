@@ -34,7 +34,8 @@ Rather than enforcing a rigid rotation schedule, NextKid continuously normalizes
 
 - Create a game by entering coach and player names, then begin pregame.
 - Check players in with recorded arrival order and time.
-- Mark a player expected late or expected absent, with an optional note.
+- Mark a player HERE with one tap. Removing HERE requires a separate confirmation tap so an accidental touch cannot erase arrival order.
+- Press and hold any pregame player to add one free-text `EXPECTED {NOTE}` status, such as `EXPECTED 30 mins late` or `EXPECTED gone`; late and absent are not separate state types.
 - Track field time and bench time only while a player is active.
 - Show the normalized field-minus-bench balance on a continuous green-through-black-to-red scale, saturating at -2.5 and +2.5 minutes.
 - Permit any manual player move regardless of the recommendation.

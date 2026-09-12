@@ -124,6 +124,14 @@ components:
     rounded: "0"
     padding: "0 2px"
     height: "44px"
+  expected-note-input:
+    backgroundColor: "{colors.fresh-card-cream}"
+    textColor: "{colors.forest-ink}"
+    typography: "{typography.body-strong}"
+    rounded: "{rounded.field}"
+    padding: "0 9px"
+    height: "44px"
+    width: "100%"
 ---
 
 # Design System: NextKid
@@ -252,7 +260,11 @@ The 66px app header pairs the condensed NextKid wordmark and an uppercase phase 
 
 ### Arrival Check-In Row
 
-Two-column check-in rows combine an arrival number, player name, and text state in a 48px ruled cell. Checked rows add a thicker green border and pale green paper wash; late and absent rows retain explicit text so color never carries status alone.
+Two-column check-in rows combine an arrival number, player name, and text state in a 48px ruled cell. One tap marks a player HERE immediately. Tapping a checked row first changes that same row to the red `CONFIRM / UNMARK?` state; only a second tap removes the check-in, protecting arrival order without moving the roster or opening a modal. Expected arrivals use one yellow `EXPECTED` treatment followed by the coach's free-text note rather than separate late and absent styles.
+
+### Expected Note Composer
+
+Holding any player row for 550ms replaces the fixed pregame footer with a compact note composer. The 44px text field accepts up to 40 characters, uses examples such as `30 mins late` or `gone`, and saves on the explicit Save button or Enter. Escape and the adjacent cancel button close it without changing the note. Saving empty text clears an existing note.
 
 ### Shared Clock
 
@@ -276,6 +288,8 @@ Each field heading pairs the coach's name with a 44px horizontal-drag handle lab
 - **Do** let rules, dense grids, and explicit labels carry structure before adding depth or decoration.
 - **Do** keep critical touch targets at least 44px high in ordinary phone layouts.
 - **Do** label coach setup fields by physical side and keep side swapping available through both horizontal drag and press.
+- **Do** make HERE a one-tap action while requiring the inline confirmation state before removing it.
+- **Do** express all predicted attendance with one `EXPECTED` label and the coach's exact note.
 
 ### Don't:
 
@@ -284,3 +298,4 @@ Each field heading pairs the coach's name with a 44px horizontal-drag handle lab
 - **Don't** fill player cards with red or green; fairness stays on the fluorescent roster-tape border.
 - **Don't** introduce rounded dashboard cards, soft floating panels, or broad shadow stacks into the paper-ledger world.
 - **Don't** collapse explicit STOP and START destinations into an ambiguous clock toggle.
+- **Don't** split expected attendance into fixed late, absent, or gone state types.

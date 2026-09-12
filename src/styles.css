@@ -90,6 +90,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #2a67d3; outline-
 .setup-submit p { min-height: 28px; margin: 0 0 7px; display: flex; align-items: center; gap: 7px; color: var(--graphite); font-size: 13px; }
 
 .pregame-screen { display: grid; grid-template-rows: 66px 76px 1fr 66px; }
+.pregame-screen.has-note-editor { grid-template-rows: 66px 76px minmax(0, 1fr) 80px; }
 .arrival-summary { display: grid; grid-template-columns: 78px 1fr 92px; align-items: stretch; border-bottom: 1px solid var(--ink); }
 .arrival-summary > div { padding: 8px 10px; border-right: 1px solid var(--rule); display: flex; flex-direction: column; justify-content: center; }
 .arrival-summary strong { font: 700 30px/1 'Barlow Condensed'; }
@@ -100,17 +101,31 @@ button:focus-visible, input:focus-visible { outline: 3px solid #2a67d3; outline-
 .checkin-ledger .section-heading h1 { font-size: 18px; }
 .checkin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .checkin-row { min-width: 0; height: 48px; display: grid; grid-template-columns: 28px 1fr auto; align-items: center; border: 1px solid var(--rule); background: rgba(255,255,255,.28); padding: 0 7px; text-align: left; }
+.checkin-row { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
 .arrival-number { font: 700 16px/1 'Barlow Condensed'; color: var(--graphite); }
 .player-name { overflow: hidden; text-overflow: ellipsis; font-weight: 700; font-size: 16px; }
-.arrival-state { display: flex; align-items: center; gap: 2px; font: 700 9px/1 'Barlow Condensed'; letter-spacing: .05em; color: var(--graphite); }
+.arrival-state { min-width: 0; max-width: 76px; display: flex; align-items: center; justify-content: flex-end; gap: 2px; font: 700 9px/1 'Barlow Condensed'; letter-spacing: .05em; color: var(--graphite); }
+.arrival-state small, .arrival-state strong { display: block; min-width: 0; }
+.arrival-state small { font: 700 8px/1 'Barlow Condensed'; letter-spacing: .06em; }
+.arrival-state strong { max-width: 76px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 10px/1.1 'Atkinson Hyperlegible'; letter-spacing: 0; }
+.is-expected .arrival-state, .confirm-unmark .arrival-state { flex-direction: column; align-items: flex-end; }
 .checkin-row.is-checked { border-color: var(--green); border-width: 2px; background: #e3f1e6; }
 .checkin-row.is-checked .arrival-state { color: #116f47; }
-.checkin-row.is-late { border-color: #b17612; }
-.checkin-row.is-absent { border-color: var(--red); opacity: .72; }
+.checkin-row.is-expected { border-color: #9b741c; background: #f5ebcc; }
+.checkin-row.confirm-unmark { border-color: var(--red); background: #f8e1da; }
+.checkin-row.confirm-unmark .arrival-state { color: #87302f; }
 .pregame-footer { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 8px 10px; border-top: 1px solid var(--ink); background: var(--paper-deep); }
 .pregame-footer span { font-size: 12px; color: var(--graphite); }
 .pregame-footer button { min-height: 46px; border: 0; background: var(--ink); color: white; display: flex; align-items: center; gap: 4px; padding: 0 13px; font-weight: 700; }
 .pregame-footer button:disabled { opacity: .45; }
+.note-composer { display: grid; grid-template-columns: minmax(0, 1fr) 44px 68px; align-items: end; gap: 6px; padding: 8px 10px 10px; border-top: 1px solid var(--ink); background: var(--paper-deep); }
+.note-composer label { min-width: 0; }
+.note-composer label > span { display: block; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 11px/1 'Barlow Condensed'; letter-spacing: .05em; text-transform: uppercase; }
+.note-composer input { width: 100%; height: 44px; border: 1px solid var(--ink); border-radius: 2px; background: #fbf6eb; padding: 0 9px; font-size: 16px; font-weight: 700; }
+.note-composer button { height: 44px; border: 1px solid var(--ink); display: grid; place-items: center; }
+.note-composer input:focus-visible, .note-composer button:focus-visible { outline-offset: -4px; }
+.cancel-note { background: transparent; }
+.save-note { background: var(--ink); color: white; font-weight: 700; }
 
 .game-screen { padding: 0 10px 10px; display: grid; grid-template-rows: 66px 70px minmax(0, 1fr) auto; gap: 9px; }
 .game-screen .app-header { margin: 0 -10px; }

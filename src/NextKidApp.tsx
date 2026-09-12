@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type DragEvent, type PointerEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type DragEvent, type PointerEvent } from 'react';
 import {
   Check,
   ChevronRight,
@@ -27,26 +27,25 @@ type Player = {
   name: string;
   number: number;
   balance: number;
-  state?: 'checked' | 'late' | 'absent' | 'waiting';
   note?: string;
 };
 
 const roster: Player[] = [
-  { name: 'Maya', number: 8, balance: 1.8, state: 'checked' },
-  { name: 'Sam', number: 1, balance: 0.7, state: 'checked' },
-  { name: 'Ivy', number: 4, balance: 0.4, state: 'checked' },
-  { name: 'Leo', number: 2, balance: 0.2, state: 'checked' },
-  { name: 'Ava', number: 3, balance: 0.1, state: 'checked' },
-  { name: 'Finn', number: 11, balance: -0.1, state: 'checked' },
-  { name: 'Nora', number: 7, balance: -0.4, state: 'checked' },
-  { name: 'Owen', number: 12, balance: -0.6, state: 'checked' },
-  { name: 'Theo', number: 6, balance: -2.1, state: 'checked' },
-  { name: 'Eli', number: 5, balance: -1.1, state: 'checked' },
-  { name: 'Kai', number: 9, balance: -0.8, state: 'checked' },
-  { name: 'Lily', number: 13, balance: -0.3, state: 'late', note: 'After music lesson · ~10:15' },
-  { name: 'Ezra', number: 14, balance: 0, state: 'waiting' },
-  { name: 'Mila', number: 15, balance: 0, state: 'absent', note: 'Family trip' },
-  { name: 'Jude', number: 16, balance: 0, state: 'waiting' },
+  { name: 'Maya', number: 8, balance: 1.8 },
+  { name: 'Sam', number: 1, balance: 0.7 },
+  { name: 'Ivy', number: 4, balance: 0.4 },
+  { name: 'Leo', number: 2, balance: 0.2 },
+  { name: 'Ava', number: 3, balance: 0.1 },
+  { name: 'Finn', number: 11, balance: -0.1 },
+  { name: 'Nora', number: 7, balance: -0.4 },
+  { name: 'Owen', number: 12, balance: -0.6 },
+  { name: 'Theo', number: 6, balance: -2.1 },
+  { name: 'Eli', number: 5, balance: -1.1 },
+  { name: 'Kai', number: 9, balance: -0.8 },
+  { name: 'Lily', number: 13, balance: -0.3, note: '30 mins late' },
+  { name: 'Ezra', number: 14, balance: 0 },
+  { name: 'Mila', number: 15, balance: 0, note: 'gone' },
+  { name: 'Jude', number: 16, balance: 0 },
 ];
 
 const initialZones = {
@@ -143,17 +142,69 @@ function NewGameScreen() {
 }
 
 function PregameScreen({ ready }: { ready: boolean }) {
-  const initial = ready ? new Set(roster.filter((p) => p.state === 'checked').slice(0, 8).map((p) => p.name)) : new Set<string>();
+  const initial = ready ? new Set(roster.slice(0, 8).map((player) => player.name)) : new Set<string>();
   const [checked, setChecked] = useState(initial);
+  const [expectedNotes, setExpectedNotes] = useState<Record<string, string>>(() => ready
+    ? Object.fromEntries(roster.filter((player) => player.note).map((player) => [player.name, player.note!]))
+    : {});
+  const [pendingUnmark, setPendingUnmark] = useState<string | null>(null);
+  const [editingNote, setEditingNote] = useState<string | null>(null);
+  const [noteDraft, setNoteDraft] = useState('');
+  const holdTimer = useRef<number | null>(null);
+  const suppressTap = useRef<string | null>(null);
+
+  useEffect(() => () => {
+    if (holdTimer.current !== null) window.clearTimeout(holdTimer.current);
+  }, []);
+
+  const clearHold = () => {
+    if (holdTimer.current !== null) window.clearTimeout(holdTimer.current);
+    holdTimer.current = null;
+  };
+
+  const startHold = (name: string) => {
+    clearHold();
+    holdTimer.current = window.setTimeout(() => {
+      suppressTap.current = name;
+      setPendingUnmark(null);
+      setEditingNote(name);
+      setNoteDraft(expectedNotes[name] ?? '');
+      holdTimer.current = null;
+    }, 550);
+  };
+
   const toggle = (name: string) => {
+    if (suppressTap.current === name) {
+      suppressTap.current = null;
+      return;
+    }
+    if (checked.has(name) && pendingUnmark !== name) {
+      setPendingUnmark(name);
+      return;
+    }
     setChecked((current) => {
       const next = new Set(current);
       next.has(name) ? next.delete(name) : next.add(name);
       return next;
     });
+    setPendingUnmark(null);
   };
+
+  const saveExpectedNote = () => {
+    if (!editingNote) return;
+    const note = noteDraft.trim();
+    setExpectedNotes((current) => {
+      const next = { ...current };
+      if (note) next[editingNote] = note;
+      else delete next[editingNote];
+      return next;
+    });
+    setEditingNote(null);
+    setNoteDraft('');
+  };
+
   return (
-    <main className="phone-sheet pregame-screen">
+    <main className={`phone-sheet pregame-screen ${editingNote ? 'has-note-editor' : ''}`}>
       <Header label="PREGAME · 9:42 AM" shared />
       <section className="arrival-summary">
         <div><strong>{checked.size}</strong><span>HERE</span></div>
@@ -161,33 +212,72 @@ function PregameScreen({ ready }: { ready: boolean }) {
         <button type="button"><Share2 size={18} /> Share</button>
       </section>
       <section className="checkin-ledger">
-        <div className="section-heading"><h1>Tap players as they arrive</h1><span>ORDER SETS STARTERS</span></div>
+        <div className="section-heading"><h1>Tap players as they arrive</h1><span>HOLD FOR EXPECTED NOTE</span></div>
         <div className="checkin-grid">
           {roster.map((player) => {
             const isChecked = checked.has(player.name);
-            const special = ready && !isChecked ? player.state : undefined;
+            const isPendingUnmark = pendingUnmark === player.name;
+            const expectedNote = !isChecked ? expectedNotes[player.name] : undefined;
             return (
               <button
-                className={`checkin-row ${isChecked ? 'is-checked' : ''} ${special ? `is-${special}` : ''}`}
+                className={`checkin-row ${isChecked ? 'is-checked' : ''} ${isPendingUnmark ? 'confirm-unmark' : ''} ${expectedNote ? 'is-expected' : ''}`}
                 key={player.name}
                 type="button"
+                onPointerDown={() => startHold(player.name)}
+                onPointerUp={clearHold}
+                onPointerCancel={clearHold}
+                onPointerLeave={clearHold}
+                onContextMenu={(event) => event.preventDefault()}
                 onClick={() => toggle(player.name)}
                 aria-pressed={isChecked}
+                aria-label={isPendingUnmark
+                  ? `${player.name} is here. Press again to confirm unmark`
+                  : isChecked
+                    ? `${player.name} is here. Press to review unmarking. Press and hold to add an expected note`
+                    : `${player.name}${expectedNote ? `, expected ${expectedNote}` : ''}. Press to mark here. Press and hold to add an expected note`}
               >
                 <span className="arrival-number">{isChecked ? [...checked].indexOf(player.name) + 1 : '—'}</span>
                 <span className="player-name">{player.name}</span>
                 <span className="arrival-state">
-                  {isChecked ? <><Check size={15} /> HERE</> : special === 'late' ? 'LATE' : special === 'absent' ? 'OUT' : 'WAITING'}
+                  {isPendingUnmark
+                    ? <><small>CONFIRM</small><strong>UNMARK?</strong></>
+                    : isChecked
+                      ? <><Check size={15} /> HERE</>
+                      : expectedNote
+                        ? <><small>EXPECTED</small><strong title={expectedNote}>{expectedNote}</strong></>
+                        : 'WAITING'}
                 </span>
               </button>
             );
           })}
         </div>
       </section>
-      <footer className="pregame-footer">
-        <span>{checked.size >= 8 ? 'First 8 are marked to start' : `${8 - checked.size} more for two full fields`}</span>
-        <button type="button" disabled={checked.size === 0}>Go to game <ChevronRight size={18} /></button>
-      </footer>
+      {editingNote ? (
+        <footer className="note-composer" aria-live="polite">
+          <label>
+            <span>Expected note · {editingNote}</span>
+            <input
+              autoFocus
+              value={noteDraft}
+              maxLength={40}
+              placeholder="30 mins late or gone"
+              aria-label={`Expected note for ${editingNote}`}
+              onChange={(event) => setNoteDraft(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') saveExpectedNote();
+                if (event.key === 'Escape') setEditingNote(null);
+              }}
+            />
+          </label>
+          <button className="cancel-note" type="button" aria-label="Cancel expected note" onClick={() => setEditingNote(null)}><X size={19} /></button>
+          <button className="save-note" type="button" onClick={saveExpectedNote}>Save</button>
+        </footer>
+      ) : (
+        <footer className="pregame-footer">
+          <span>{checked.size >= 8 ? 'First 8 are marked to start' : `${8 - checked.size} more for two full fields`}</span>
+          <button type="button" disabled={checked.size === 0}>Go to game <ChevronRight size={18} /></button>
+        </footer>
+      )}
     </main>
   );
 }

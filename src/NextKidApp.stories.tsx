@@ -40,13 +40,59 @@ export const PregameNoArrivals: Story = {
   },
 };
 
-export const PregameReadyWithLateAndAbsent: Story = {
+export const PregameCheckingInFirstPlayer: Story = {
+  args: { scenario: 'pregame-empty' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: /^Maya. Press to mark here/i }));
+    await expect(canvas.getByRole('button', { name: /Maya is here/i })).toHaveAttribute('aria-pressed', 'true');
+    await expect(canvas.getByText('7 more for two full fields')).toBeVisible();
+  },
+};
+
+export const PregameReadyWithExpectedNotes: Story = {
   args: { scenario: 'pregame-ready' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('First 8 are marked to start')).toBeVisible();
-    await expect(canvas.getAllByText('LATE')[0]).toBeVisible();
-    await expect(canvas.getAllByText('OUT')[0]).toBeVisible();
+    await expect(canvas.getByText('30 mins late')).toBeVisible();
+    await expect(canvas.getByText('gone')).toBeVisible();
+  },
+};
+
+export const PregameConfirmingUnmark: Story = {
+  args: { scenario: 'pregame-ready' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const owen = canvas.getByRole('button', { name: /Owen is here/i });
+    await userEvent.click(owen);
+    await expect(canvas.getByRole('button', { name: /Owen is here. Press again to confirm unmark/i })).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(canvas.getByRole('button', { name: /Owen is here. Press again to confirm unmark/i }));
+    await expect(canvas.getByRole('button', { name: /^Owen. Press to mark here/i })).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.click(canvas.getByRole('button', { name: /^Owen. Press to mark here/i }));
+    await userEvent.click(canvas.getByRole('button', { name: /Owen is here/i }));
+    await expect(canvas.getByRole('button', { name: /Owen is here. Press again to confirm unmark/i })).toBeVisible();
+  },
+};
+
+export const PregameAddingExpectedNote: Story = {
+  args: { scenario: 'pregame-ready' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const ezra = canvas.getByRole('button', { name: /^Ezra. Press to mark here/i });
+    await fireEvent.pointerDown(ezra, { pointerId: 2 });
+    await new Promise((resolve) => window.setTimeout(resolve, 600));
+    await fireEvent.pointerUp(ezra, { pointerId: 2 });
+    const note = canvas.getByRole('textbox', { name: 'Expected note for Ezra' });
+    await userEvent.type(note, '30 mins late');
+    await expect(note).toHaveValue('30 mins late');
+    await userEvent.click(canvas.getByRole('button', { name: 'Save' }));
+    const expectedEzra = canvas.getByRole('button', { name: /Ezra, expected 30 mins late/i });
+    await expect(expectedEzra).toBeVisible();
+    await fireEvent.pointerDown(expectedEzra, { pointerId: 3 });
+    await new Promise((resolve) => window.setTimeout(resolve, 600));
+    await fireEvent.pointerUp(expectedEzra, { pointerId: 3 });
+    await expect(canvas.getByRole('textbox', { name: 'Expected note for Ezra' })).toHaveValue('30 mins late');
   },
 };
 

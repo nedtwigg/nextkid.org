@@ -11,7 +11,7 @@ Mobile-only Storybook prototype for the complete NextKid coaching workflow. Mode
 
 ## Audience, job, and constraints
 
-Two microsoccer coaches use a shared phone URL outdoors and need to record attendance and update player placement without losing attention on play. Every story must fit a 390×844 viewport without page scrolling. In the game view, color quietly guides judgment without displaying minutes or prescribing a move; screen-reader labels provide a non-visual equivalent.
+Two microsoccer coaches use a shared phone URL outdoors and need to record attendance and update player placement without losing attention on play. Every story must fit a 390×844 viewport without page scrolling. Pregame check-in is one tap, undo requires an inline confirmation, and holding a player opens a free-text `EXPECTED {NOTE}` composer. In the game view, color quietly guides judgment without displaying minutes or prescribing a move; screen-reader labels provide a non-visual equivalent.
 
 ## Direction and memorable moment
 
@@ -28,7 +28,8 @@ Approved composition: `.impeccable/mocks/placement-only.json` (explicit user dir
 | Placement | Left and right coach field ledgers plus a full-width seven-player bench; all 15 names coexist in one viewport | CSS grid/list |
 | Coach side swap | A 44px horizontal-drag handle in each coach heading; dragging or pressing swaps the complete field columns | Pointer events, button semantics, CSS grid |
 | Player marker | Name only, with a continuous red–black–green border and drag affordance; no displayed minutes or recommendation | Button/HTML/CSS |
-| Pregame | Arrival-order checklist with late/absent note states | Semantic form controls |
+| Pregame | One-tap arrival checklist with an inline two-tap unmark confirmation | Semantic buttons and ARIA pressed state |
+| Expected note | 550ms player hold opens a 40-character composer in the fixed footer; all predicted attendance uses `EXPECTED {NOTE}` | Pointer events, text input, live region |
 | Setup | Coach names, roster, single primary progression action | Semantic form controls |
 | Paused state | Clock state unmistakable; resume is explicit and placement remains editable | HTML/CSS |
 
