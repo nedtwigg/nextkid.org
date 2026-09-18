@@ -177,3 +177,42 @@ button:focus-visible, input:focus-visible { outline: 3px solid #2a67d3; outline-
   .player-strip { transition: transform 160ms cubic-bezier(.2,.8,.2,1), box-shadow 160ms cubic-bezier(.2,.8,.2,1); }
   .player-strip:hover { transform: translateY(-1px); box-shadow: 0 4px 9px rgba(20,40,29,.12); }
 }
+
+/* Connected match cards reuse the prototype's touchline layout. */
+button:disabled { cursor: default; opacity: .5; }
+.live-setup .roster-editor { min-height: 0; overflow-y: auto; padding-bottom: 10px; }
+.live-setup .setup-submit { flex-shrink: 0; padding-top: 10px; }
+.live-name-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+.live-name-grid .name-line { grid-template-columns: 22px minmax(0, 1fr); height: 44px; }
+.live-name-grid input { width: 100%; min-width: 0; font-size: 16px; }
+.live-screen .field-ledger { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
+.live-screen .field-ledger > .player-strip { flex: 0 0 48px; }
+.live-screen .field-heading { flex: 0 0 44px; }
+.live-screen .field-heading h2 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.live-screen .coach-drag-handle { min-width: 60px; }
+.live-screen .bench-row { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; min-height: 48px; max-height: min(432px, 40dvh); overflow-y: auto; }
+.live-screen .player-strip { height: 48px; min-height: 48px; padding: 0 8px 0 10px; }
+.live-screen .player-strip svg { width: 15px; }
+.live-screen .player-strip.is-selected { outline: 3px solid #2a67d3; outline-offset: -6px; }
+.live-screen .strip-name { font-size: 17px; }
+.live-screen .bench-row .strip-name { font-size: 17px; }
+.field-gap { display: flex; align-items: baseline; gap: 6px; flex: 0 0 26px; color: var(--graphite); }
+.field-gap strong { font: 700 22px/1 'Barlow Condensed'; font-variant-numeric: tabular-nums; color: var(--ink); }
+.field-gap span { font-size: 12px; }
+.live-screen .field-ledger .tap-target { top: 82px; }
+.live-attendance { overflow-y: auto; padding-bottom: 10px; }
+.attendance-link { display: flex; align-items: center; gap: 4px; min-height: 38px; border: 0; background: transparent; font-size: 12px; }
+.empty-bench { grid-column: 1 / -1; color: var(--graphite); font-size: 14px; padding: 10px 0; }
+.live-toast { position: absolute; z-index: 10; left: 10px; right: 10px; bottom: 10px; background: var(--ink); color: white; padding: 12px; display: flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 2px 12px #0003; }
+.live-toast button { color: white; background: transparent; border: 0; min-width: 36px; min-height: 36px; margin-left: auto; }
+.live-dialog-backdrop { position: absolute; z-index: 20; inset: 0; background: #14281d99; display: grid; align-items: center; padding: 18px; }
+.live-dialog { background: var(--paper); border: 1px solid var(--ink); padding: 18px; display: grid; gap: 14px; max-height: 100%; overflow-y: auto; }
+.live-dialog h2 { margin: 0; }
+.live-dialog label { display: grid; gap: 5px; }
+.live-dialog input, .live-dialog select { width: 100%; min-width: 0; height: 44px; padding: 0 8px; font: inherit; border: 1px solid var(--ink); background: #fbf6eb; }
+.live-dialog button { min-height: 44px; padding: 0 12px; background: var(--ink); color: white; border: 0; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 8px; }
+@media (max-height: 700px) {
+  .live-screen .field-heading { flex-basis: 34px; }
+  .live-screen .field-ledger .tap-target { top: 72px; }
+}

@@ -37,7 +37,8 @@ Rather than enforcing a rigid rotation schedule, NextKid continuously normalizes
 - Mark a player HERE with one tap. Removing HERE requires a separate confirmation tap so an accidental touch cannot erase arrival order.
 - Press and hold any pregame player to add one free-text `EXPECTED {NOTE}` status, such as `EXPECTED 30 mins late` or `EXPECTED gone`; late and absent are not separate state types.
 - Track field time and bench time only while a player is active.
-- Show the normalized field-minus-bench balance on a continuous green-through-black-to-red scale, saturating at -2.5 and +2.5 minutes.
+- Show the normalized field-minus-bench balance on a continuous green-through-black-to-red scale, saturating at -10 and +10 minutes.
+- Use equal-sized field and bench cards, with two bench columns. Each field shows half the gap between its highest balance and the bench's lowest balance, in minutes.
 - Permit any manual player move regardless of the recommendation.
 - Label coach-name inputs by physical side (Left coach and Right coach), and allow the two coach field columns to swap sides during the game.
 - Run as a phone-only website; desktop may simply stretch the phone interface.

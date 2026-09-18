@@ -3,6 +3,11 @@ dist/
 storybook-static/
 .DS_Store
 *.tsbuildinfo
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
 .impeccable/
 .impeccable/questions/
 .impeccable/sketches/

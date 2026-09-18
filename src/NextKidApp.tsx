@@ -56,7 +56,7 @@ const initialZones = {
 
 const playerByName = new Map(roster.map((player) => [player.name, player]));
 
-function Brand() {
+export function Brand() {
   return (
     <div className="brand" aria-label="NextKid">
       NextKid<span aria-hidden="true">•</span>
@@ -82,7 +82,7 @@ function Header({ label, shared = false }: { label: string; shared?: boolean }) 
   );
 }
 
-function WelcomeScreen({ onNewGame }: { onNewGame: () => void }) {
+export function WelcomeScreen({ onNewGame }: { onNewGame: () => void }) {
   return (
     <main className="phone-sheet welcome-screen">
       <div className="welcome-rule"><span>TOUCHLINE TIMEKEEPER</span><span>01</span></div>
@@ -282,10 +282,10 @@ function PregameScreen({ ready }: { ready: boolean }) {
   );
 }
 
-function balanceColor(balance: number) {
+export function balanceColor(balance: number) {
   const midpoint = [70, 85, 76];
   const endpoint = balance < 0 ? [10, 157, 97] : [216, 61, 61];
-  const amount = Math.min(Math.abs(balance) / 2.5, 1);
+  const amount = Math.min(Math.abs(balance) / 10, 1);
   const channel = (index: number) => Math.round(midpoint[index] + (endpoint[index] - midpoint[index]) * amount);
   return `rgb(${channel(0)} ${channel(1)} ${channel(2)})`;
 }

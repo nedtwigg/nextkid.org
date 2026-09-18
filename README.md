@@ -43,10 +43,12 @@ Each second:
 - every active player is assigned a normalized time, equal to "(F-B) - (F-B)_mid"
   - half of the players will have positive values, and have will have negative values
 - there is a color scale: red fades to black fades to green
-  - +2.5 = red (coach should consider taking them out)
-  - -2.5 = green (coach should consider putting them in)
+  - +10 = red (coach should consider taking them out)
+  - -10 = green (coach should consider putting them in)
   - 0 = black (coach can leave it alone)
-  - the color scale saturates at +2.5/-2.5, and fades smoothly from black to red/green in-between
+  - the color scale saturates at +10/-10 minutes, and fades smoothly from black to red/green in-between
+
+Each field displays `(highest field-player balance - lowest bench-player balance) / 2` in minutes, using the full values before color saturation. This is an approximate playing-time gap; negative values mean the bench is ahead. Empty fields or an empty bench show a dash. Field and bench cards share the same dimensions, with two columns on the bench.
 
 ### Clock start/stop
 
@@ -63,3 +65,46 @@ pnpm, cloudflare pages/workers as appropriate
 - gametime starts once the clock starts
 - 24 hours after the game has stopped, the data backing up the game is deleted
 - you can share the URL, anyone with the URL can make changes, everyone can see what anyone else with the URL is doing
+
+## Development and deployment
+
+The live app uses React/Vite and a Cloudflare Worker with static assets. `GameRoom` is a SQLite-backed Durable Object: every random game URL maps to one object, and both coaches connect to it using hibernatable WebSockets. No separate database or secrets are needed by the deployed app.
+
+```sh
+pnpm install
+pnpm build
+pnpm dev:worker
+```
+
+Open `http://localhost:8787` for the complete local app. For React hot reload, also run `pnpm dev` and use the Vite URL; its `/api` proxy connects to the local Worker. `pnpm storybook` retains the original isolated demo scenarios.
+
+Validation:
+
+```sh
+pnpm test            # deterministic clock, arrival, placement and validation rules
+pnpm test:sync       # real local Worker: two sockets, retries, hibernation and expiry
+pnpm test:browser    # two mobile browser sessions; requires dev:worker on port 8787
+pnpm test-storybook --run
+```
+
+The browser suite creates a disposable local game, tests check-in, placement, clock updates, late arrivals and reconnect behavior. Use a local server for this suite. It can take about a minute while waiting for a disconnected socket to be detected.
+
+To publish to the Cloudflare account that owns `nextkid.org`:
+
+```sh
+pnpm exec wrangler login
+pnpm deploy
+```
+
+`wrangler.jsonc` defines the `nextkid` Worker, its Durable Object migration, static assets, and `nextkid.org` Custom Domain. Cloudflare provisions the domain mapping and certificate. Do not remove or rename the existing Durable Object migration after deploying it.
+
+## Shared game behavior
+
+- The server processes commands atomically and broadcasts complete snapshots with increasing revisions. Concurrent edits to different players both apply; for the same player, server processing order determines the final placement.
+- Command IDs are persisted with the game. Retrying an acknowledged command cannot apply it twice. After a disconnect, the phone checks receipts for uncertain commands and discards commands that never arrived, with a notice to the coach; it does not replay old substitutions.
+- The server owns clock timestamps. Phones estimate server time using synchronization round trips, tick locally, and derive field/bench totals and fairness colors. Stopping the clock stops all time accounting.
+- The first eight active arrivals fill the two fields when the coaches enter the game; later arrivals join the bench. Attendance remains accessible during play, including marking players out when they leave. Hold a player in attendance (or press F2) to edit expected late/absent, notes, and names before the first clock start.
+- Moving players updates optimistically while connected. Disconnected phones show an estimated clock and disable edits until a fresh synchronization completes.
+- Swapping the physical left/right field display is a preference on each phone; it does not move players or change the other coach's view.
+- Stopping schedules deletion after 24 hours. Restarting cancels deletion; repeated Stop does not extend the deadline. Games that never start expire 24 hours after creation. Expiry deletes player data and command receipts, closes connected clients, and makes the link unavailable.
+- The unguessable game URL grants editing access to anyone who has it. No accounts are required. New games prefill Ned and Brian and the team's 15-player roster; all names remain editable during setup. Storybook and the labeled welcome example use sample rosters.
